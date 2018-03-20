@@ -1,0 +1,11 @@
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/bin/Debug/netcoreapp2.0/RTD_IOT.deps.json
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/bin/Debug/netcoreapp2.0/RTD_IOT.runtimeconfig.json
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/bin/Debug/netcoreapp2.0/RTD_IOT.runtimeconfig.dev.json
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/bin/Debug/netcoreapp2.0/RTD_IOT.dll
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/bin/Debug/netcoreapp2.0/RTD_IOT.pdb
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/obj/Debug/netcoreapp2.0/RTD_IOT.csprojResolveAssemblyReference.cache
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/obj/Debug/netcoreapp2.0/RTD_IOT.csproj.CoreCompileInputs.cache
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/obj/Debug/netcoreapp2.0/RTD_IOT.AssemblyInfoInputs.cache
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/obj/Debug/netcoreapp2.0/RTD_IOT.AssemblyInfo.cs
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/obj/Debug/netcoreapp2.0/RTD_IOT.dll
+/Users/macbookpro/Desktop/RTD_IOT/RTD_IOT/obj/Debug/netcoreapp2.0/RTD_IOT.pdb
