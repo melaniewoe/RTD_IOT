@@ -38,6 +38,11 @@ namespace RTD_IOT.Controllers
             Stop stop_inst = new Stop();
             Trip trip_inst = new Trip();
 
+            //list of latitude of buses
+            List<float> latitude_list = new List<float>();
+            //list of longitude
+            List<float> longitude_list = new List<float>();
+
             foreach (FeedEntity entity in feed.entity)
             {
                 if (entity.vehicle != null)
@@ -46,13 +51,17 @@ namespace RTD_IOT.Controllers
                     {
                         //int number;
                         //bool result = Int32.TryParse(1405, out number);
-                        if (entity.vehicle.trip.route_id != null && Stop.stops[entity.vehicle.stop_id].stop_lat == "39.722618")
+                        if (entity.vehicle.trip.route_id != null)
                         {
                             Console.WriteLine("Vehicle ID = " + entity.vehicle.vehicle.id);
                             Console.WriteLine("Current Position Information:");
                             Console.WriteLine("Current Latitude = " + entity.vehicle.position.latitude);
                             Console.WriteLine("Current Longitude = " + entity.vehicle.position.longitude);
                             Console.WriteLine("Current Bearing = " + entity.vehicle.position.bearing);
+                            ViewData["Message"] = entity.vehicle.position.latitude;
+                            //add latitude and longitude to list
+                            latitude_list.Add(entity.vehicle.position.latitude);
+                            longitude_list.Add(entity.vehicle.position.longitude);
                             Console.WriteLine("Current Status = " + entity.vehicle.current_status + " StopID: " );
                             if (Stop.stops.ContainsKey(entity.vehicle.stop_id))
                             {
@@ -92,6 +101,10 @@ namespace RTD_IOT.Controllers
                     }
                 }
             }
+            Console.WriteLine("------------------------------------------------------------------------------");
+            Console.WriteLine(latitude_list.Count);
+            ViewData["latitude_list"] = latitude_list;
+            ViewData["longitude_list"] = longitude_list;
             return View();
         }
 

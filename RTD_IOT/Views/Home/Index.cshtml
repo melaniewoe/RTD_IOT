@@ -5,6 +5,15 @@
 <div class="row">
     <div class="col-md-12">
         <h2>Distance between two points</h2>
+        @foreach (float list in ViewBag.latitude_list)
+                {
+                    <h3>@list</h3>
+                }
+
+        @foreach (float list2 in ViewBag.longitude_list)
+                {
+                    <h3>@list2</h3>
+                }
         <p>
             This demonstrates getting and displaying the distance between two points
         </p>
@@ -56,6 +65,7 @@
             directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
         });
 
+
       function calculateAndDisplayRoute() {
         source = document.getElementById("travelfrom").value;
         destination = document.getElementById("travelto").value;
@@ -74,8 +84,11 @@
             window.alert('Directions request failed due to ' + status);
     
           }
+         
+            
         });
 
+         
     //*********DISTANCE AND DURATION**********************//
             var service = new google.maps.DistanceMatrixService();
             service.getDistanceMatrix({
@@ -94,7 +107,7 @@
                     duration = parseFloat(duration / 60).toFixed(2);
                     dvDistance.innerHTML = "";
                     dvDistance.innerHTML += "Distance: " + distance + "<br />";
-                    dvDistance.innerHTML += "Time:" + duration + " min";
+                    dvDistance.innerHTML += "Time: " + duration + " min";
                 } else {
                     alert("Unable to find the distance via road.");
                 }
