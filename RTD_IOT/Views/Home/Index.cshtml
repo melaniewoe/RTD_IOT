@@ -4,27 +4,15 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Distance between two points</h2>
-        @foreach (float list in ViewBag.latitude_list)
-                {
-                    <h3>@list</h3>
-                }
-
-        @foreach (float list2 in ViewBag.longitude_list)
-                {
-                    <h3>@list2</h3>
-                }
-        <p>
-            This demonstrates getting and displaying the distance between two points
-        </p>
+        <h2>Choose your route</h2>
 
         <div>
             <div>
                 Travel From : <input id="travelfrom" type="text" name="name" value="Denver, CO" />
                 To : <input id="travelto" type="text" name="name" value="Aurora, CO" />
                 <input type="button" value="Get Route" onclick="calculateAndDisplayRoute()" />
-
-            </div>
+                <br>
+                <br>
             <br />
             <div>
                 <div id="dvDistance">
@@ -32,7 +20,11 @@
             </div>
 
         </div>
+        <div id="panel" style="width: 300px; float: left;"></div>
+        <div id="right-panel"></div>
         <div id="dvMap" style="min-height:500px"></div>
+        <div id="directions-panel"></div>
+
 
     </div>
 </div>
@@ -43,11 +35,12 @@
 @section scripts{
 
    <!--ENSURE YOU CHANGE TO YOUR OWN API KEY HERE !!! --> 
-=
+
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb-BD4SSYpX9NWyrmAz8yucaf4A7oT6-A&callback=initMap" type="text/javascript"></script>
     
     <script> 
 
+    
     // initialise the location of the map (ref lat and lng)
     
         var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -57,6 +50,7 @@
           center: {lat: 37.77, lng: -122.447}
         });
         directionsDisplay.setMap(map);
+        directionsDisplay.setPanel(document.getElementById('right-panel'));
 
 
       google.maps.event.addDomListener(window, 'load', function () {
@@ -64,6 +58,10 @@
             new google.maps.places.SearchBox(document.getElementById('travelto'));
             directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
         });
+
+      
+        
+
 
 
       function calculateAndDisplayRoute() {
@@ -76,25 +74,35 @@
           // Note that Javascript allows us to access the constant
           // using square brackets and a string value as its
           // "property."
-          travelMode: google.maps.TravelMode.TRANSIT
+          travelMode: google.maps.TravelMode.TRANSIT,
+          transitOptions: {
+            modes: ['BUS']
+          },
         }, function(response, status) {
           if (status == 'OK') {
             directionsDisplay.setDirections(response);
+            writeDirectionsSteps(directionsDisplay.directions.routes[0].legs[0].steps);
+            addClickEventListenerToMap(map);
           } else {
             window.alert('Directions request failed due to ' + status);
     
           }
          
             
-        });
+       });
 
-         
+     
+      
+
+        
+    
+    
     //*********DISTANCE AND DURATION**********************//
             var service = new google.maps.DistanceMatrixService();
             service.getDistanceMatrix({
                 origins: [source],
                 destinations: [destination],
-                travelMode: google.maps.TravelMode.DRIVING,
+                travelMode: google.maps.TravelMode.TRANSIT,
                 unitSystem: google.maps.UnitSystem.METRIC,
                 avoidHighways: false,
                 avoidTolls: false
@@ -112,6 +120,80 @@
                     alert("Unable to find the distance via road.");
                 }
             }); 
+
+
+    
+            function writeDirectionsSteps(steps) {
+                var markersArrayBus = [];
+                var markersArray = [];
+
+                for (var i = 0; i < steps.length; i++) {
+                  if (typeof steps[i].transit !== "undefined") {
+                    @foreach (var list in ViewBag.latLngList)
+                    {
+                       <text>
+                            if(steps[i].transit.line.short_name == '@list.busline')
+                            {
+                                
+                                markersArrayBus.push(new google.maps.Marker({
+                                    position: new google.maps.LatLng('@list.Lat', '@list.Lng', false),
+                                    title: 'Whatever title',
+                                    map: map
+                                }));
+
+                            }
+                            else if('@list.busline' != steps[i].transit.line.short_name)
+                            {
+                                
+                                markersArray.push(new google.maps.Marker({
+                                     icon:{
+                                        url: 'https://www.google.com/maps/vt/icon/name=assets/icons/transit/quantum/container_shadow-1-small.png,assets/icons/transit/quantum/container-1-small.png,assets/icons/transit/quantum/bus-1-small.png&highlight=0,b1ff,ffffff?color=ff000000&scale=1'
+                                     },
+                                     position: new google.maps.LatLng('@list.Lat', '@list.Lng', false),
+                                     title: 'Whatever title',
+                                     map: map
+                                }));
+                            }
+
+                        </text>
+
+                    }
+
+                                
+                  }
+                }
+              }
+
+
+        function addClickEventListenerToMap(map) {
+          // add 'tap' listener
+          map.addEventListener('tap', function (evt) {
+            var coords =  map.screenToGeo(evt.currentPointer.viewportX, evt.currentPointer.viewportY);
+            findNearestMarker(coords);
+          }, false);
+        }
+    
+            function findNearestMarker(coords) {
+              var minDist = 1000,
+                nearest_text = '*None*',
+                markerDist,
+                // get all objects added to the map
+                objects = map.getObjects(),
+                len = map.getObjects().length,
+                i;
+
+              // iterate over objects and calculate distance between them
+              for (i = 0; i < len; i += 1) {
+                markerDist = objects[i].getPosition().distance(coords);
+                if (markerDist < minDist) {
+                  minDist = markerDist;
+                  nearest_text = objects[i].getData();
+                }
+              }
+
+              window.alert('The nearest marker is: ' + nearest_text);
+            }
+    
       }
 
     

@@ -39,9 +39,12 @@ namespace RTD_IOT.Controllers
             Trip trip_inst = new Trip();
 
             //list of latitude of buses
-            List<float> latitude_list = new List<float>();
+            //List<float> latitude_list = new List<float>();
             //list of longitude
-            List<float> longitude_list = new List<float>();
+            //List<float> longitude_list = new List<float>();
+            //List<String> route_id_list = new List<String>();
+            List<LatLng> latLngList = new List<LatLng>();
+            List<StopLatLng> stoplatLngList = new List<StopLatLng>();
 
             foreach (FeedEntity entity in feed.entity)
             {
@@ -53,6 +56,8 @@ namespace RTD_IOT.Controllers
                         //bool result = Int32.TryParse(1405, out number);
                         if (entity.vehicle.trip.route_id != null)
                         {
+                            Console.WriteLine("Route ID " + entity.vehicle.trip.route_id);
+                            //route_id_list.Add(entity.vehicle.trip.route_id);
                             Console.WriteLine("Vehicle ID = " + entity.vehicle.vehicle.id);
                             Console.WriteLine("Current Position Information:");
                             Console.WriteLine("Current Latitude = " + entity.vehicle.position.latitude);
@@ -60,14 +65,16 @@ namespace RTD_IOT.Controllers
                             Console.WriteLine("Current Bearing = " + entity.vehicle.position.bearing);
                             ViewData["Message"] = entity.vehicle.position.latitude;
                             //add latitude and longitude to list
-                            latitude_list.Add(entity.vehicle.position.latitude);
-                            longitude_list.Add(entity.vehicle.position.longitude);
+                            //latitude_list.Add(entity.vehicle.position.latitude);
+                            //longitude_list.Add(entity.vehicle.position.longitude);
+                            latLngList.Add(new LatLng() {Lat = entity.vehicle.position.latitude, Lng = entity.vehicle.position.longitude, busline = entity.vehicle.trip.route_id});
                             Console.WriteLine("Current Status = " + entity.vehicle.current_status + " StopID: " );
                             if (Stop.stops.ContainsKey(entity.vehicle.stop_id))
                             {
                                 Console.WriteLine("The name of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_name + "\"");
                                 Console.WriteLine("The Latitude of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_lat + "\"");
                                 Console.WriteLine("The Longitude of this StopID is \"" + Stop.stops[entity.vehicle.stop_id].stop_long + "\"");
+                                stoplatLngList.Add(new StopLatLng() { stop_Lat = Stop.stops[entity.vehicle.stop_id].stop_lat, stop_Lng = Stop.stops[entity.vehicle.stop_id].stop_long});
                                 string wheelChairOK = "IS NOT";
                                 if (Stop.stops[entity.vehicle.stop_id].wheelchair_access)
                                 {
@@ -102,11 +109,22 @@ namespace RTD_IOT.Controllers
                 }
             }
             Console.WriteLine("------------------------------------------------------------------------------");
-            Console.WriteLine(latitude_list.Count);
-            ViewData["latitude_list"] = latitude_list;
-            ViewData["longitude_list"] = longitude_list;
+            //Console.WriteLine(latitude_list.Count);
+            //ViewData["latitude_list"] = latitude_list;
+            //ViewData["longitude_list"] = longitude_list;
+            //Console.WriteLine(latLngList);
+            //ViewData["route_id_list"] = route_id_list;
+            ViewData["latLngList"] = latLngList;
+            ViewData["stoplatLngList"] = stoplatLngList;
+
+            foreach (var item in latLngList)
+            {
+                Console.WriteLine(item.busline);
+            }
+
             return View();
         }
+
 
         public IActionResult About()
         {

@@ -18,5 +18,6 @@
     <Compile Remove="Controllers\RtdData.cs" />
     <Compile Remove="Models\Stop.cs" />
     <Compile Remove="Models\Trip.cs" />
+    <Compile Remove="Models\EmptyClass.cs" />
   </ItemGroup>
 </Project>
